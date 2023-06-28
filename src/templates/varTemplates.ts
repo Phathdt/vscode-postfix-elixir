@@ -7,7 +7,7 @@ import { IndentInfo } from "../template";
 import { isStringLiteral } from "../utils/typescript";
 
 export class VarTemplate extends BaseExpressionTemplate {
-  constructor(private keyword: "var" | "let" | "const") {
+  constructor(private keyword: "var") {
     super(keyword);
   }
 
@@ -29,6 +29,7 @@ export class VarTemplate extends BaseExpressionTemplate {
       (super.canUse(node) ||
         this.isNewExpression(node) ||
         this.isObjectLiteral(node) ||
+        this.isArrayLiteral(node) ||
         isStringLiteral(node)) &&
       !this.inReturnStatement(node) &&
       !this.inFunctionArgument(node) &&

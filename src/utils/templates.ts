@@ -10,6 +10,10 @@ import {
 import { VarTemplate } from "../templates/varTemplates";
 import { EnumEachTemplate, EnumMapTemplate } from "../templates/EnumTemplates";
 import { InspectTemplate } from "../templates/InspectTemplates";
+import {
+  EnumPipeEachTemplate,
+  EnumPipeMapTemplate,
+} from "../templates/PipeEnumTemplates";
 
 export const loadCustomTemplates = () => {
   const config = vsc.workspace.getConfiguration("postfixElixir");
@@ -39,6 +43,8 @@ export const loadBuiltinTemplates = () => {
     new EnumMapTemplate("map"),
     new EnumEachTemplate("each"),
     new InspectTemplate("iins"),
+    new EnumPipeMapTemplate("pmap"),
+    new EnumPipeEachTemplate("peach"),
     // new IfEqualityTemplate("null", "===", "null"),
     // new IfEqualityTemplate("notnull", "!==", "null"),
     // new IfEqualityTemplate("undefined", "===", "undefined", true),
