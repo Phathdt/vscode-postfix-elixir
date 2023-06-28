@@ -1,70 +1,56 @@
-import * as vsc from 'vscode'
-import { IPostfixTemplate } from '../template'
-import { AwaitTemplate } from '../templates/awaitTemplate'
-import { CastTemplate } from '../templates/castTemplates'
-import { ConsoleTemplate } from '../templates/consoleTemplates'
-import { CustomTemplate } from '../templates/customTemplate'
-import { EqualityTemplate } from '../templates/equalityTemplates'
-import { ForTemplate, ForOfTemplate, ForEachTemplate, ForInTemplate } from '../templates/forTemplates'
-import { IfTemplate, ElseTemplate, IfEqualityTemplate } from '../templates/ifTemplates'
-import { NewTemplate } from '../templates/newTemplate'
-import { NotTemplate } from '../templates/notTemplate'
-import { PromisifyTemplate } from '../templates/promisifyTemplate'
-import { ReturnTemplate } from '../templates/returnTemplate'
-import { VarTemplate } from '../templates/varTemplates'
-import { CallTemplate } from '../templates/callTemplate'
+import * as vsc from "vscode";
+import { IPostfixTemplate } from "../template";
+import { CustomTemplate } from "../templates/customTemplate";
+import {
+  IfTemplate,
+  ElseTemplate,
+  IsNillTemplate,
+  NotIsNillTemplate,
+} from "../templates/ifTemplates";
+import { VarTemplate } from "../templates/varTemplates";
+import { EnumEachTemplate, EnumMapTemplate } from "../templates/EnumTemplates";
+import { InspectTemplate } from "../templates/InspectTemplates";
 
 export const loadCustomTemplates = () => {
-  const config = vsc.workspace.getConfiguration('postfix')
-  const templates = config.get<ICustomTemplateDefinition[]>('customTemplates')
+  const config = vsc.workspace.getConfiguration("postfixElixir");
+  const templates = config.get<ICustomTemplateDefinition[]>("customTemplates");
   if (templates) {
-    return templates.map(t => new CustomTemplate(t.name, t.description, t.body, t.when))
+    return templates.map(
+      (t) => new CustomTemplate(t.name, t.description, t.body, t.when)
+    );
   }
 
-  return []
-}
+  return [];
+};
 
 export const loadBuiltinTemplates = () => {
-  const config = vsc.workspace.getConfiguration('postfix')
-  const disabledTemplates = config.get<string[]>('disabledBuiltinTemplates', [])
+  const config = vsc.workspace.getConfiguration("postfixElixir");
+  const disabledTemplates = config.get<string[]>(
+    "disabledBuiltinTemplates",
+    []
+  );
 
   const templates: IPostfixTemplate[] = [
-    new CastTemplate('cast'),
-    new CastTemplate('castas'),
-    new CallTemplate('call'),
-    new ConsoleTemplate('log'),
-    new ConsoleTemplate('warn'),
-    new ConsoleTemplate('error'),
-    new ForTemplate('for'),
-    new ForOfTemplate('forof'),
-    new ForInTemplate('forin'),
-    new ForEachTemplate('foreach'),
-    new IfTemplate('if'),
-    new ElseTemplate('else'),
-    new IfEqualityTemplate('null', '===', 'null'),
-    new IfEqualityTemplate('notnull', '!==', 'null'),
-    new IfEqualityTemplate('undefined', '===', 'undefined', true),
-    new IfEqualityTemplate('notundefined', '!==', 'undefined', true),
-    new EqualityTemplate('null', '===', 'null'),
-    new EqualityTemplate('notnull', '!==', 'null'),
-    new EqualityTemplate('undefined', '===', 'undefined', true),
-    new EqualityTemplate('notundefined', '!==', 'undefined', true),
-    new NewTemplate('new'),
-    new NotTemplate('not'),
-    new PromisifyTemplate('promisify'),
-    new ReturnTemplate('return'),
-    new VarTemplate('var'),
-    new VarTemplate('let'),
-    new VarTemplate('const'),
-    new AwaitTemplate('await')
-  ]
+    new VarTemplate("var"),
+    new IfTemplate("if"),
+    new ElseTemplate("else"),
+    new IsNillTemplate("nil"),
+    new NotIsNillTemplate("nnil"),
+    new EnumMapTemplate("map"),
+    new EnumEachTemplate("each"),
+    new InspectTemplate("iins"),
+    // new IfEqualityTemplate("null", "===", "null"),
+    // new IfEqualityTemplate("notnull", "!==", "null"),
+    // new IfEqualityTemplate("undefined", "===", "undefined", true),
+    // new IfEqualityTemplate("notundefined", "!==", "undefined", true),
+  ];
 
-  return templates.filter(t => !disabledTemplates.includes(t.templateName))
-}
+  return templates.filter((t) => !disabledTemplates.includes(t.templateName));
+};
 
 interface ICustomTemplateDefinition {
-  name: string
-  description: string
-  body: string,
-  when: string[]
+  name: string;
+  description: string;
+  body: string;
+  when: string[];
 }
