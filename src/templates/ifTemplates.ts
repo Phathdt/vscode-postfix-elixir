@@ -5,19 +5,7 @@ import { getConfigValue, getIndentCharacters } from "../utils";
 import { invertExpression } from "../utils/invert-expression";
 import { IndentInfo } from "../template";
 
-abstract class BaseIfElseTemplate extends BaseExpressionTemplate {
-  override canUse(node: ts.Node) {
-    return (
-      super.canUse(node) &&
-      !this.inReturnStatement(node) &&
-      !this.inFunctionArgument(node) &&
-      !this.inVariableDeclaration(node) &&
-      !this.inAssignmentStatement(node)
-    );
-  }
-}
-
-export class IfTemplate extends BaseIfElseTemplate {
+export class IfTemplate extends BaseExpressionTemplate {
   buildCompletionItem(node: ts.Node, indentInfo?: IndentInfo) {
     node = this.unwindBinaryExpression(node, false);
     const replacement = this.unwindBinaryExpression(node, true).getText();
@@ -28,7 +16,7 @@ export class IfTemplate extends BaseIfElseTemplate {
   }
 }
 
-export class ElseTemplate extends BaseIfElseTemplate {
+export class ElseTemplate extends BaseExpressionTemplate {
   buildCompletionItem(node: ts.Node, indentInfo?: IndentInfo) {
     node = this.unwindBinaryExpression(node, false);
     const replacement = invertExpression(
@@ -41,7 +29,7 @@ export class ElseTemplate extends BaseIfElseTemplate {
   }
 }
 
-export class IsNillTemplate extends BaseIfElseTemplate {
+export class IsNillTemplate extends BaseExpressionTemplate {
   buildCompletionItem(node: ts.Node, indentInfo?: IndentInfo) {
     node = this.unwindBinaryExpression(node, false);
     const replacement = this.unwindBinaryExpression(node, true).getText();
@@ -51,7 +39,7 @@ export class IsNillTemplate extends BaseIfElseTemplate {
       .build();
   }
 }
-export class NotIsNillTemplate extends BaseIfElseTemplate {
+export class NotIsNillTemplate extends BaseExpressionTemplate {
   buildCompletionItem(node: ts.Node, indentInfo?: IndentInfo) {
     node = this.unwindBinaryExpression(node, false);
     const replacement = this.unwindBinaryExpression(node, true).getText();
@@ -61,7 +49,7 @@ export class NotIsNillTemplate extends BaseIfElseTemplate {
       .build();
   }
 }
-export class IfEqualityTemplate extends BaseIfElseTemplate {
+export class IfEqualityTemplate extends BaseExpressionTemplate {
   constructor(
     private keyword: string,
     private operator: string,

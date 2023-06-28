@@ -160,15 +160,6 @@ export abstract class BaseExpressionTemplate extends BaseTemplate {
   abstract override buildCompletionItem(node: ts.Node, indentInfo?: IndentInfo);
 
   canUse(node: ts.Node) {
-    return (
-      !this.inIfStatement(node) &&
-      !this.isTypeNode(node) &&
-      !this.inAssignmentStatement(node) &&
-      (this.isIdentifier(node) ||
-        this.isExpression(node) ||
-        this.isUnaryExpression(node) ||
-        this.isBinaryExpression(node) ||
-        this.isCallExpression(node))
-    );
+    return true;
   }
 }

@@ -1,6 +1,6 @@
 import * as ts from "typescript";
 import { CompletionItemBuilder } from "../completionItemBuilder";
-import { BaseTemplate } from "./baseTemplates";
+import { BaseExpressionTemplate } from "./baseTemplates";
 import {
   getConfigValue,
   getIndentCharacters,
@@ -8,28 +8,6 @@ import {
 } from "../utils";
 import { inferForVarTemplate } from "../utils/infer-names";
 import { IndentInfo } from "../template";
-
-abstract class BaseEnumTemplate extends BaseTemplate {
-  canUse(node: ts.Node): boolean {
-    return (
-      !this.inReturnStatement(node) &&
-      !this.inIfStatement(node) &&
-      !this.inFunctionArgument(node) &&
-      !this.inVariableDeclaration(node) &&
-      !this.inAssignmentStatement(node) &&
-      !this.isTypeNode(node) &&
-      !this.isBinaryExpression(node) &&
-      (this.isIdentifier(node) ||
-        this.isPropertyAccessExpression(node) ||
-        this.isElementAccessExpression(node) ||
-        this.isCallExpression(node) ||
-        this.isArrayLiteral(node))
-    );
-  }
-
-  protected isArrayLiteral = (node: ts.Node) =>
-    node.kind === ts.SyntaxKind.ArrayLiteralExpression;
-}
 
 const getArrayItemNames = (node: ts.Node): string[] => {
   const inferVarNameEnabled = getConfigValue<boolean>("inferVariableName");
@@ -39,7 +17,7 @@ const getArrayItemNames = (node: ts.Node): string[] => {
   return suggestedNames?.length > 0 ? suggestedNames : ["item"];
 };
 
-export class EnumMapTemplate extends BaseEnumTemplate {
+export class EnumMapTemplate extends BaseExpressionTemplate {
   buildCompletionItem(node: ts.Node, indentInfo?: IndentInfo) {
     node = this.unwindBinaryExpression(node, false);
     const replacement = this.unwindBinaryExpression(node, true).getText();
@@ -54,7 +32,7 @@ export class EnumMapTemplate extends BaseEnumTemplate {
       .build();
   }
 }
-export class EnumEachTemplate extends BaseEnumTemplate {
+export class EnumEachTemplate extends BaseExpressionTemplate {
   buildCompletionItem(node: ts.Node, indentInfo?: IndentInfo) {
     node = this.unwindBinaryExpression(node, false);
     const replacement = this.unwindBinaryExpression(node, true).getText();

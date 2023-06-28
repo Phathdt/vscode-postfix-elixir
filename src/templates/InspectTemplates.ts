@@ -3,19 +3,7 @@ import { CompletionItemBuilder } from "../completionItemBuilder";
 import { BaseExpressionTemplate } from "./baseTemplates";
 import { IndentInfo } from "../template";
 
-abstract class BaseInspectTemplate extends BaseExpressionTemplate {
-  override canUse(node: ts.Node) {
-    return (
-      super.canUse(node) &&
-      !this.inReturnStatement(node) &&
-      !this.inFunctionArgument(node) &&
-      !this.inVariableDeclaration(node) &&
-      !this.inAssignmentStatement(node)
-    );
-  }
-}
-
-export class InspectTemplate extends BaseInspectTemplate {
+export class InspectTemplate extends BaseExpressionTemplate {
   buildCompletionItem(node: ts.Node, indentInfo?: IndentInfo) {
     node = this.unwindBinaryExpression(node, false);
     const replacement = this.unwindBinaryExpression(node, true).getText();

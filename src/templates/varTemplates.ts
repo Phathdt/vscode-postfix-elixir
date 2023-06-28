@@ -4,7 +4,6 @@ import { BaseExpressionTemplate } from "./baseTemplates";
 import { getConfigValue, getPlaceholderWithOptions } from "../utils";
 import { inferVarTemplateName } from "../utils/infer-names";
 import { IndentInfo } from "../template";
-import { isStringLiteral } from "../utils/typescript";
 
 export class VarTemplate extends BaseExpressionTemplate {
   constructor(private keyword: "var") {
@@ -22,19 +21,5 @@ export class VarTemplate extends BaseExpressionTemplate {
     return CompletionItemBuilder.create(this.keyword, node, indentInfo)
       .replace(`${getPlaceholderWithOptions(suggestedVarNames)} = {{expr}}$0`)
       .build();
-  }
-
-  override canUse(node: ts.Node) {
-    return (
-      (super.canUse(node) ||
-        this.isNewExpression(node) ||
-        this.isObjectLiteral(node) ||
-        this.isArrayLiteral(node) ||
-        isStringLiteral(node)) &&
-      !this.inReturnStatement(node) &&
-      !this.inFunctionArgument(node) &&
-      !this.inVariableDeclaration(node) &&
-      !this.inAssignmentStatement(node)
-    );
   }
 }
